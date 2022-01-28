@@ -8,7 +8,9 @@ const connectDB = require("./server/database/connection");
 
 const PORT = process.env.PORT || 3000;
 //Import Routes
-const route = require("./server/routes/userRouter");
+const userRouter = require("./server/routes/userRouter");
+const loginRouter = require("./server/routes/loginRouter");
+
 
 dotenv.config();
 
@@ -19,6 +21,8 @@ connectDB();
 //Middlewear
 app.use(express.json());
 //Route Middlewares
-app.use("/api/users", route);
+app.use("/api/users", userRouter);
+app.use("/api/users", loginRouter);
+
 
 app.listen(PORT, () => console.log("Running"));

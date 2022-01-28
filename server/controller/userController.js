@@ -1,75 +1,75 @@
 const User = require("../model/User");
-var user = require("../model/User");
+var createError = require("http-errors");
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
   if (!req.body) {
     res.status(400).send({ message: "Content can not be empty!" });
     return;
   }
-
   const user = new User({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
   });
 
-  user
-    .save(user)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occured while creating a create operation",
+  const doesExist = await User.findOne({ email: user.email });
+  if (doesExist) res.status(400).send({ message: "Email already used!" });
+  else {
+    user
+      .save(user)
+      .then((data) => {
+        res.send(data);
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message:
+            err.message ||
+            "Some error occured while creating a create operation",
+        });
       });
-    });
+  }
 };
 
 exports.find = (req, res) => {
-
-
-  if(req.query.id)
-  {
+  if (req.query.id) {
     const id = req.query.id;
-    user.findById(id).then(data=>{
-      if(!data){
-        res.status(404).send({message:"Not found user with id"+id})
-      }
-      else {
-        res.send(data);
-      }
-    }).catch(err=>{
-      res.status(500).send({message:"Error retrieving user with id "+id})
-    })
-  }
-
-
-  else{
-  user
-    .find()
-    .then((user) => {
-      res.send(user);
-    })
-    .catch((err) => {
-      res
-        .status(500)
-        .send({
+    user
+      .findById(id)
+      .then((data) => {
+        if (!data) {
+          res.status(404).send({ message: "Not found user with id" + id });
+        } else {
+          res.send(data);
+        }
+      })
+      .catch((err) => {
+        res
+          .status(500)
+          .send({ message: "Error retrieving user with id " + id });
+      });
+  } else {
+    user
+      .find()
+      .then((user) => {
+        res.send(user);
+      })
+      .catch((err) => {
+        res.status(500).send({
           message:
             err.message || "Error Occured while retriving user Information",
         });
-    });}
+      });
+  }
 };
 
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
   if (!req.body) {
     res.status(400).send({ message: "Content can not be empty!" });
     return;
   }
 
   const id = req.params.id;
-  user
-    .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+  User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
       if (!data) {
         res.status(404).send({
