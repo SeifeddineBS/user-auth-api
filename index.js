@@ -1,23 +1,24 @@
-const express =require('express');
-const app=express();
-const mongoose=require('mongoose');
-const dotenv=require('dotenv');
+const express = require("express");
+const app = express();
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const morgan = require("morgan");
+const bodyparser = require("body-parser");
+const connectDB = require("./server/database/connection");
+
+const PORT = process.env.PORT || 3000;
 //Import Routes
-const authRoute=require('./routes/auth');
+const route = require("./server/routes/userRouter");
 
 dotenv.config();
 
 //Connect DB
 
-mongoose.connect(process.env.DB_CONNECT,
-()=>console.log('Connected to DB'));
+connectDB();
 
 //Middlewear
 app.use(express.json());
 //Route Middlewares
-app.use('/api/user',authRoute);
+app.use("/api/users", route);
 
-
- 
-
-app.listen(3000,()=>console.log('Running'));
+app.listen(PORT, () => console.log("Running"));
