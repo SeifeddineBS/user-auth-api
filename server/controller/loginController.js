@@ -23,7 +23,6 @@ exports.login = async (req, res) => {
         res.header('auth-token',token).send(token);
 
 
-        res.send({ message: "Logged IN !" });
 
     }
   }
