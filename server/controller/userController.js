@@ -33,7 +33,7 @@ exports.create = async (req, res) => {
 exports.find = (req, res) => {
   if (req.query.id) {
     const id = req.query.id;
-    user
+    User
       .findById(id)
       .then((data) => {
         if (!data) {
