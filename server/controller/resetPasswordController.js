@@ -60,7 +60,7 @@ exports.resetPasswordCheckToken = async (req, res) => {
       doesExist
         .update({ $pull: { resetPasswordRequest: { token: token } } })
         .then((data) => {});
-      res.send({ message: "token expired " });
+      res.status(400).send({ message: "token expired " });
     }
   } else {
     res.status(400).send({ message: "Token does not exist" });
