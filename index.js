@@ -1,9 +1,6 @@
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const morgan = require("morgan");
-const bodyparser = require("body-parser");
 const connectDB = require("./server/database/connection");
 
 const PORT = process.env.PORT || 3000;
@@ -11,6 +8,11 @@ const PORT = process.env.PORT || 3000;
 const userRouter = require("./server/routes/userRouter");
 const loginRouter = require("./server/routes/loginRouter");
 const resetPasswordRouter = require("./server/routes/resetPasswordRouter");
+
+
+
+const sendMail = require("./server/services/emailService")
+
 
 
 
@@ -30,3 +32,8 @@ app.use("/api/users", resetPasswordRouter);
 
 
 app.listen(PORT, () => console.log("Running"));
+
+
+
+
+

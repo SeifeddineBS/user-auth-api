@@ -1,13 +1,17 @@
 const User = require("../model/User");
 const jwt = require("jsonwebtoken");
+const sendMail = require("../services/emailService");
+
 
 // reset password request
 exports.resetPasswordRequest = async (req, res) => {
   const email = req.params.email;
   const doesExist = await User.findOne({ email: email });
+  //search if email exist or not 
   if (!doesExist) {
     res.status(400).send({ message: "Email does not exist" });
   } else {
+    // create the token 
     const token = jwt.sign(
       { email: doesExist.email },
       process.env.TOKEN_SECRET,
@@ -16,6 +20,17 @@ exports.resetPasswordRequest = async (req, res) => {
       }
     );
     // User.findByIdAndUpdate(doesExist._id,doesExist).then((data)=>res.Send);
+   //send mail to user 
+   var mailOptions = {
+    to: "seifeddine.bensalah@gmail.com",
+    subject: "Sending Email using Node.js",
+    text: "http://localhost:3000/api/users/resetPasswordCheckToken/"+token,
+  };
+  sendMail(mailOptions);
+
+   
+   
+    //Add token to user document
     doesExist
       .update({ $push: { resetPasswordRequest: { token: token } } })
       .then((data) => {
