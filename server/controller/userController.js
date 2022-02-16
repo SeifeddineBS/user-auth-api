@@ -48,7 +48,7 @@ exports.find = (req, res) => {
           .send({ message: "Error retrieving user with id " + id });
       });
   } else {
-    user
+    User
       .find()
       .then((user) => {
         res.send(user);
