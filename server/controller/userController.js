@@ -83,7 +83,7 @@ exports.update = async (req, res) => {
       }
     })
     .catch((err) => {
-      res.status.send({ message: "Error update user information" });
+      res.status(400).send({ message: "Error update user information" });
     });
 };
 
