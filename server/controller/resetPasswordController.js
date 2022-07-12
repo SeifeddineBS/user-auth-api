@@ -57,7 +57,7 @@ exports.resetPasswordCheckToken = async (req, res) => {
     return;
   }
 
-  const currentDate = Date.now() / 1000;
+  const currentDate=Date.now()/1000;
   if (email && tokenExpiration) {
       
     doesExist = await User.findOne({

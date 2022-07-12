@@ -1,5 +1,6 @@
 const User = require("../model/User");
 var createError = require("http-errors");
+const bcrypt = require("bcrypt");
 
 exports.create = async (req, res) => {
   if (!req.body) {
@@ -33,8 +34,7 @@ exports.create = async (req, res) => {
 exports.find = (req, res) => {
   if (req.query.id) {
     const id = req.query.id;
-    User
-      .findById(id)
+    User.findById(id)
       .then((data) => {
         if (!data) {
           res.status(404).send({ message: "Not found user with id" + id });
@@ -48,8 +48,7 @@ exports.find = (req, res) => {
           .send({ message: "Error retrieving user with id " + id });
       });
   } else {
-    User
-      .find()
+    User.find()
       .then((user) => {
         res.send(user);
       })
@@ -69,6 +68,10 @@ exports.update = async (req, res) => {
   }
 
   const id = req.params.id;
+
+  const salt = await bcrypt.genSalt(10);
+  req.body.password = await bcrypt.hash(req.body.password, salt);
+
   User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
       if (!data) {
@@ -86,8 +89,7 @@ exports.update = async (req, res) => {
 
 exports.delete = (req, res) => {
   const id = req.params.id;
-  user
-    .findByIdAndDelete(id)
+  User.findByIdAndDelete(id)
     .then((data) => {
       if (!data) {
         res
