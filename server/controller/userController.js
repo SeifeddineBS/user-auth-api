@@ -80,6 +80,7 @@ exports.update = async (req, res) => {
         });
       } else {
         res.send(data);
+        
       }
     })
     .catch((err) => {
