@@ -80,10 +80,11 @@ exports.update = async (req, res) => {
         });
       } else {
         res.send(data);
+        
       }
     })
     .catch((err) => {
-      res.status.send({ message: "Error update user information" });
+      res.status(400).send({ message: "Error update user information" });
     });
 };
 
